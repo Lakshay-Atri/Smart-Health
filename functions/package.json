@@ -1,0 +1,14 @@
+{
+  "name": "healthcare-backend-functions",
+  "description": "Cloud Functions for healthcare stock-out predictions and stats",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "private": true
+}
