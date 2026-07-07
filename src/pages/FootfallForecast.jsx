@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHealthCentres } from '../context/HealthCentreContext';
 import { useDemandForecast } from '../hooks/useDemandForecast';
 import Card from '../components/shared/Card';
+import { LoadingScreen } from '../components/LoadingScreen';
 import { 
   ResponsiveContainer, 
   ComposedChart,
@@ -67,16 +68,11 @@ export const FootfallForecast = () => {
   }, [activeHistorical, forecastData]);
 
   if (loading || !activeCentre) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-        <p className="text-slate-400 animate-pulse text-sm">Computing Simple Moving Average forecasts...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
-    <div className="space-y-6 animate-slide-up">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>

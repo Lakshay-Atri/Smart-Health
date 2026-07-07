@@ -13,7 +13,8 @@ import {
     ChevronLeft,
     AlertTriangle,
     Repeat,
-    TrendingUp
+    TrendingUp,
+    ClipboardList
   } from 'lucide-react';
 
 export function Layout({ children }) {
@@ -65,6 +66,12 @@ export function Layout({ children }) {
       path: '/alerts',
       icon: <Bell className="w-5 h-5" />,
       active: location.pathname === '/alerts'
+    },
+    {
+      name: 'Staff Data Entry',
+      path: '/data-entry',
+      icon: <ClipboardList className="w-5 h-5" />,
+      active: location.pathname === '/data-entry'
     }
   ];
 

@@ -24,7 +24,9 @@ const centres = [
   { id: "centre_2", name: "CHC Shirali", location: "Shirali, Bhatkal Taluk" },
   { id: "centre_3", name: "PHC Murdeshwar", location: "Murdeshwar, Bhatkal Taluk" },
   { id: "centre_4", name: "PHC Mavalli", location: "Mavalli, Bhatkal Taluk" },
-  { id: "centre_5", name: "PHC Jali", location: "Jali, Bhatkal Taluk" }
+  { id: "centre_5", name: "PHC Jali", location: "Jali, Bhatkal Taluk" },
+  { id: "centre_6", name: "Life Care Bhatkal", location: "Bhatkal, Uttara Kannada" },
+  { id: "centre_7", name: "Apollo Internation Hospital Delhi", location: "Delhi" }
 ];
 
 const stockItemsByCentre = {
@@ -50,6 +52,14 @@ const stockItemsByCentre = {
   centre_5: [
     { id: "med_1", name: "Oxytocin Injection", currentStock: 120, avgDailyUsage: 38, reorderThreshold: 100 },
     { id: "med_2", name: "Folic Acid 5mg", currentStock: 1500, avgDailyUsage: 74, reorderThreshold: 500 }
+  ],
+  centre_6: [
+    { id: "med_1", name: "Paracetamol 500mg", currentStock: 1500, avgDailyUsage: 100, reorderThreshold: 500 },
+    { id: "med_2", name: "Amoxicillin 500mg", currentStock: 250, avgDailyUsage: 40, reorderThreshold: 150 }
+  ],
+  centre_7: [
+    { id: "med_1", name: "Paracetamol 500mg", currentStock: 4000, avgDailyUsage: 250, reorderThreshold: 1000 },
+    { id: "med_2", name: "Metformin 500mg", currentStock: 600, avgDailyUsage: 90, reorderThreshold: 300 }
   ]
 };
 
@@ -58,7 +68,9 @@ const footfallByCentre = {
   centre_2: { "2026-07-01": { patientCount: 210 }, "2026-07-02": { patientCount: 198 }, "2026-07-03": { patientCount: 225 } },
   centre_3: { "2026-07-01": { patientCount: 60 }, "2026-07-02": { patientCount: 55 }, "2026-07-03": { patientCount: 65 } },
   centre_4: { "2026-07-01": { patientCount: 40 }, "2026-07-02": { patientCount: 38 }, "2026-07-03": { patientCount: 42 } },
-  centre_5: { "2026-07-01": { patientCount: 90 }, "2026-07-02": { patientCount: 85 }, "2026-07-03": { patientCount: 95 } }
+  centre_5: { "2026-07-01": { patientCount: 90 }, "2026-07-02": { patientCount: 85 }, "2026-07-03": { patientCount: 95 } },
+  centre_6: { "2026-07-01": { patientCount: 80 }, "2026-07-02": { patientCount: 85 }, "2026-07-03": { patientCount: 90 } },
+  centre_7: { "2026-07-01": { patientCount: 300 }, "2026-07-02": { patientCount: 320 }, "2026-07-03": { patientCount: 310 } }
 };
 
 const attendanceByCentre = {
@@ -66,7 +78,9 @@ const attendanceByCentre = {
   centre_2: [{ doctorId: "dr_3", checkedIn: true }, { doctorId: "dr_4", checkedIn: false }],
   centre_3: [{ doctorId: "dr_5", checkedIn: true }],
   centre_4: [{ doctorId: "dr_6", checkedIn: false }],
-  centre_5: [{ doctorId: "dr_7", checkedIn: true }]
+  centre_5: [{ doctorId: "dr_7", checkedIn: true }],
+  centre_6: [{ doctorId: "dr_8", checkedIn: true }],
+  centre_7: [{ doctorId: "dr_9", checkedIn: true }, { doctorId: "dr_10", checkedIn: true }]
 };
 
 async function seedDatabase() {

@@ -10,6 +10,7 @@ import {
 import { doctorProfiles } from '../db/mockData';
 import { Card } from '../components/Card';
 import { StatusBadge } from '../components/StatusBadge';
+import { LoadingScreen } from '../components/LoadingScreen';
 import { 
   AreaChart, 
   Area, 
@@ -72,12 +73,7 @@ export function CentreDetail() {
   }, [centreId]);
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-24 space-y-4">
-        <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-        <p className="text-slate-400 font-semibold text-sm">Syncing clinic details...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!centre) {
@@ -131,7 +127,7 @@ export function CentreDetail() {
   const totalDoctors = attendance.length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Back navigation and title */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
         <div className="space-y-1">

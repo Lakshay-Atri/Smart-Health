@@ -3,8 +3,10 @@ export const initialCentres = {
   'c-1': { id: 'c-1', name: 'Bhatkal Taluka Hospital', location: 'District Sector 4', totalBeds: 120, occupiedBeds: 82 },
   'c-2': { id: 'c-2', name: 'Life Care Bhatkal', location: 'North Ridge', totalBeds: 45, occupiedBeds: 18 },
   'c-3': { id: 'c-3', name: 'Ambedkar International Hospital', location: 'East Bank Delta', totalBeds: 25, occupiedBeds: 22 },
-  'c-4': { id: 'c-4', name: 'Apollo International', location: 'Highland Ridge', totalBeds: 60, occupiedBeds: 41 },
-  'c-5': { id: 'c-5', name: 'Grace Maternity & Surgical Center', location: 'South Woods', totalBeds: 30, occupiedBeds: 12 }
+  'c-4': { id: 'c-4', name: 'Apollo Internation Hospital Delhi', location: 'Highland Ridge', totalBeds: 60, occupiedBeds: 41 },
+  'c-5': { id: 'c-5', name: 'Grace Maternity & Surgical Center', location: 'South Woods', totalBeds: 30, occupiedBeds: 12 },
+  'c-6': { id: 'c-6', name: 'Life Care Bhatkal', location: 'Bhatkal Taluk', totalBeds: 80, occupiedBeds: 45 },
+  'c-7': { id: 'c-7', name: 'Apollo Internation Hospital Delhi', location: 'Delhi', totalBeds: 200, occupiedBeds: 150 }
 };
 
 export const initialStock = {
@@ -38,6 +40,14 @@ export const initialStock = {
     'item-1': { id: 'item-1', name: 'Paracetamol 500mg', currentStock: 350, avgDailyUsage: 40, reorderThreshold: 80 },
     'item-2': { id: 'item-2', name: 'Amoxicillin capsules', currentStock: 220, avgDailyUsage: 25, reorderThreshold: 50 },
     'item-4': { id: 'item-4', name: 'Disposable Syringes 5ml', currentStock: 1800, avgDailyUsage: 200, reorderThreshold: 400 }
+  },
+  'c-6': {
+    'item-1': { id: 'item-1', name: 'Paracetamol 500mg', currentStock: 1500, avgDailyUsage: 100, reorderThreshold: 500 },
+    'item-2': { id: 'item-2', name: 'Amoxicillin capsules', currentStock: 250, avgDailyUsage: 40, reorderThreshold: 150 }
+  },
+  'c-7': {
+    'item-1': { id: 'item-1', name: 'Paracetamol 500mg', currentStock: 4000, avgDailyUsage: 250, reorderThreshold: 1000 },
+    'item-2': { id: 'item-2', name: 'Amoxicillin capsules', currentStock: 600, avgDailyUsage: 90, reorderThreshold: 300 }
   }
 };
 
@@ -74,6 +84,14 @@ export const initialAttendance = {
   'c-5': [
     { doctorId: 'doc-2', checkedIn: true },
     { doctorId: 'doc-1', checkedIn: false }
+  ],
+  'c-6': [
+    { doctorId: 'doc-1', checkedIn: true },
+    { doctorId: 'doc-3', checkedIn: false }
+  ],
+  'c-7': [
+    { doctorId: 'doc-4', checkedIn: true },
+    { doctorId: 'doc-5', checkedIn: true }
   ]
 };
 
@@ -100,7 +118,9 @@ export const initialFootfall = {
   'c-2': generateFootfallData(45),
   'c-3': generateFootfallData(25),
   'c-4': generateFootfallData(75),
-  'c-5': generateFootfallData(35)
+  'c-5': generateFootfallData(35),
+  'c-6': generateFootfallData(80),
+  'c-7': generateFootfallData(310)
 };
 
 export const testAvailability = {
@@ -132,6 +152,17 @@ export const testAvailability = {
     { name: 'Malaria Rapid Test', status: 'available' },
     { name: 'Dengue NS1 Antigen', status: 'available' },
     { name: 'COVID-19 Ag Rapid', status: 'available' }
+  ],
+  'c-6': [
+    { name: 'Malaria Rapid Test', status: 'available' },
+    { name: 'COVID-19 Ag Rapid', status: 'available' }
+  ],
+  'c-7': [
+    { name: 'Malaria Rapid Test', status: 'available' },
+    { name: 'Dengue NS1 Antigen', status: 'available' },
+    { name: 'Tuberculosis RT-PCR', status: 'available' },
+    { name: 'COVID-19 Ag Rapid', status: 'available' },
+    { name: 'Complete Blood Count', status: 'available' }
   ]
 };
 

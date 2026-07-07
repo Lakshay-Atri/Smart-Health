@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useHealthCentres } from '../context/HealthCentreContext';
 import Card from '../components/shared/Card';
 import StatusBadge from '../components/shared/StatusBadge';
+import { LoadingScreen } from '../components/LoadingScreen';
 import { 
   ResponsiveContainer, 
   LineChart, 
@@ -63,16 +64,11 @@ export const StockOutWarning = () => {
   }, [stock, centres, loading, warningThreshold]);
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-        <p className="text-slate-500 animate-pulse text-sm">Loading early warning system data...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
-    <div className="space-y-6 animate-slide-up">
+    <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useHealthCentres } from '../context/HealthCentreContext';
 import Card from '../components/shared/Card';
 import StatusBadge from '../components/shared/StatusBadge';
+import { LoadingScreen } from '../components/LoadingScreen';
 import { 
   ResponsiveContainer, 
   BarChart, 
@@ -62,16 +63,11 @@ export const Redistribution = () => {
   }, [suggestions, selectedItemId]);
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-        <p className="text-slate-400 animate-pulse text-sm">Running redistribution comparative engines...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
-    <div className="space-y-6 animate-slide-up">
+    <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2">

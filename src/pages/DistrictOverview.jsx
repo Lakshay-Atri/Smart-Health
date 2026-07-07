@@ -8,6 +8,7 @@ import {
 } from '../db/firebase';
 import { Card } from '../components/Card';
 import { StatusBadge } from '../components/StatusBadge';
+import { SkeletonCard } from '../components/SkeletonCard';
 import { 
   Search, 
   Users, 
@@ -163,6 +164,7 @@ function CentreCard({ centre, onClick, onMetricsResolved }) {
 
 export function DistrictOverview() {
   const [centres, setCentres] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all'); // all, red, yellow, green
   const [metricsAggregator, setMetricsAggregator] = useState({});
@@ -170,7 +172,10 @@ export function DistrictOverview() {
 
   // Subscribe to centers from DB
   useEffect(() => {
-    const unsub = subscribeToCentres(setCentres);
+    const unsub = subscribeToCentres((centresList) => {
+      setCentres(centresList);
+      setLoading(false);
+    });
     return () => unsub();
   }, []);
 
@@ -215,8 +220,8 @@ export function DistrictOverview() {
 
   // Filter centres based on search query & stock health status
   const filteredCentres = centres.filter(centre => {
-    const matchesSearch = centre.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          centre.location.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (centre.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (centre.location || '').toLowerCase().includes(searchQuery.toLowerCase());
     
     const centreMetrics = metricsAggregator[centre.id];
     const matchesStatus = statusFilter === 'all' || (centreMetrics && centreMetrics.stockStatus === statusFilter);
@@ -367,24 +372,34 @@ export function DistrictOverview() {
       </div>
 
       {/* Grid of Centres */}
-      {filteredCentres.length > 0 ? (
+      {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCentres.map((centre) => (
-            <CentreCard
-              key={centre.id}
-              centre={centre}
-              onClick={() => navigate(`/centre/${centre.id}`)}
-              onMetricsResolved={handleMetricsResolved}
-            />
+          {[...Array(6)].map((_, i) => (
+            <SkeletonCard key={i} />
           ))}
         </div>
       ) : (
-        <div className="bg-white rounded-3xl border border-dashed border-slate-200 py-16 px-4 text-center">
-          <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <h3 className="font-bold text-slate-800 text-lg">No Health Centres Found</h3>
-          <p className="text-slate-400 text-sm max-w-xs mx-auto mt-1">
-            We couldn't find any health center matching your search criteria. Try modifying your filters.
-          </p>
+        <div className="animate-fade-in">
+          {filteredCentres.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCentres.map((centre) => (
+                <CentreCard
+                  key={centre.id}
+                  centre={centre}
+                  onClick={() => navigate(`/centre/${centre.id}`)}
+                  onMetricsResolved={handleMetricsResolved}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-3xl border border-dashed border-slate-200 py-16 px-4 text-center">
+              <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+              <h3 className="font-bold text-slate-800 text-lg">No Health Centres Found</h3>
+              <p className="text-slate-400 text-sm max-w-xs mx-auto mt-1">
+                We couldn't find any health center matching your search criteria. Try modifying your filters.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

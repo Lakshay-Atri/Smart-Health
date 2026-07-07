@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { subscribeToStock, subscribeToCentres } from '../db/firebase';
 import { Card } from '../components/Card';
 import { StatusBadge } from '../components/StatusBadge';
+import { LoadingScreen } from '../components/LoadingScreen';
 import { 
   ArrowLeft, 
   Search, 
@@ -118,12 +119,7 @@ export function InventoryPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-24 space-y-4">
-        <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-        <p className="text-slate-400 font-semibold text-sm">Syncing inventory database...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!centre) {
@@ -145,7 +141,7 @@ export function InventoryPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Header and Back Link */}
       <div className="space-y-1">
         <div className="flex items-center space-x-2">

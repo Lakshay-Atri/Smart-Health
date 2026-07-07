@@ -22,7 +22,7 @@ const firebaseConfig = {
 // Check if variables are configured
 const isFirebaseConfigured = !!import.meta.env.VITE_FIREBASE_PROJECT_ID;
 
-let db = null;
+export let db = null;
 if (isFirebaseConfigured) {
   try {
     const app = initializeApp(firebaseConfig);

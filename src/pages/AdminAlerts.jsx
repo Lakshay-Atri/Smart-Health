@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHealthCentres } from '../context/HealthCentreContext';
 import Card from '../components/shared/Card';
 import StatusBadge from '../components/shared/StatusBadge';
+import { LoadingScreen } from '../components/LoadingScreen';
 import { 
   Bell, 
   Trash2, 
@@ -70,16 +71,11 @@ export const AdminAlerts = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-        <p className="text-slate-500 animate-pulse text-sm">Aggregating alerts and attendance cycles...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
-    <div className="space-y-6 animate-slide-up">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

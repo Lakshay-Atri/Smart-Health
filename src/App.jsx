@@ -8,6 +8,7 @@ import StockOutWarning from './pages/StockOutWarning';
 import Redistribution from './pages/Redistribution';
 import FootfallForecast from './pages/FootfallForecast';
 import AdminAlerts from './pages/AdminAlerts';
+import DataEntry from './pages/DataEntry';
 import { HealthCentreProvider } from './context/HealthCentreContext';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/redistribution" element={<Redistribution />} />
             <Route path="/forecast" element={<FootfallForecast />} />
             <Route path="/alerts" element={<AdminAlerts />} />
+            <Route path="/data-entry" element={<DataEntry />} />
             <Route path="*" element={
               <div className="bg-white rounded-3xl p-12 text-center border border-slate-100 max-w-lg mx-auto mt-12">
                 <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">Page Not Found</h2>
