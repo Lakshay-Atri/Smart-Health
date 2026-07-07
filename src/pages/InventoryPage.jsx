@@ -161,11 +161,11 @@ export function InventoryPage() {
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">Stock Sheet Manager</h2>
-            <p className="text-slate-400 text-sm font-medium">Real-time depletion tracking and reorder sheets for {centre.name}.</p>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">Medicine Stock</h2>
+            <p className="text-slate-500 text-sm font-medium">Track stock levels, usage, and when medicines will run out for {centre.name}.</p>
           </div>
           <div className="flex items-center space-x-1 text-xs text-slate-400 bg-white border border-slate-100 px-3 py-1.5 rounded-xl shadow-sm">
-            <Building2 className="w-4 h-4 text-slate-400 mr-1.5" />
+            <Building2 className="w-4 h-4 text-slate-450 mr-1.5" />
             <span className="font-semibold text-slate-700">{centre.location}</span>
           </div>
         </div>
@@ -175,26 +175,26 @@ export function InventoryPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {/* Total unique items */}
         <div className="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Items</span>
+          <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wider block">Total Items</span>
           <span className="text-2xl font-extrabold text-slate-850 text-slate-800 block mt-1">{processedStock.length}</span>
         </div>
 
         {/* Critical items count */}
         <div className={`border p-4 rounded-2xl shadow-sm ${criticalCount > 0 ? 'bg-rose-50 border-rose-100' : 'bg-white border-slate-100'}`}>
-          <span className={`text-[10px] font-bold uppercase tracking-wider block ${criticalCount > 0 ? 'text-rose-700' : 'text-slate-400'}`}>Critical Depletions</span>
+          <span className={`text-[10px] font-bold uppercase tracking-wider block ${criticalCount > 0 ? 'text-rose-700' : 'text-slate-400'}`}>Urgent Needs</span>
           <span className={`text-2xl font-extrabold block mt-1 ${criticalCount > 0 ? 'text-rose-600' : 'text-slate-800'}`}>{criticalCount}</span>
         </div>
 
         {/* Low items count */}
         <div className={`border p-4 rounded-2xl shadow-sm ${lowCount > 0 ? 'bg-amber-50 border-amber-100' : 'bg-white border-slate-100'}`}>
-          <span className={`text-[10px] font-bold uppercase tracking-wider block ${lowCount > 0 ? 'text-amber-700' : 'text-slate-400'}`}>Below Threshold</span>
+          <span className={`text-[10px] font-bold uppercase tracking-wider block ${lowCount > 0 ? 'text-amber-700' : 'text-slate-400'}`}>Running Low</span>
           <span className={`text-2xl font-extrabold block mt-1 ${lowCount > 0 ? 'text-amber-600' : 'text-slate-800'}`}>{lowCount}</span>
         </div>
 
         {/* Fully stocked count */}
         <div className="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Stable Items</span>
-          <span className="text-2xl font-extrabold text-emerald-600 block mt-1">{healthyCount}</span>
+          <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wider block">All Good</span>
+          <span className="text-2xl font-extrabold text-emerald-650 block mt-1">{healthyCount}</span>
         </div>
       </div>
 
@@ -202,10 +202,10 @@ export function InventoryPage() {
       <div className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-450" />
           <input
             type="text"
-            placeholder="Search catalog by item name..."
+            placeholder="Search medicines by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-medium transition-all"
@@ -222,37 +222,37 @@ export function InventoryPage() {
                 : 'bg-white border-slate-200 text-slate-650 text-slate-600 hover:bg-slate-50'
             }`}
           >
-            All Catalog
+            All Medicines
           </button>
           <button
             onClick={() => setFilterType('critical')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
               filterType === 'critical'
-                ? 'bg-rose-600 border-rose-600 text-white shadow-sm'
-                : 'bg-rose-50 border-rose-200/50 text-rose-700 hover:bg-rose-100/50'
+                ? 'bg-rose-650 border-rose-650 text-white shadow-sm'
+                : 'bg-rose-50 border-rose-200/50 text-rose-750 hover:bg-rose-100/50'
             }`}
           >
-            Critical (&lt;3 Days)
+            Urgent (under 3 days left)
           </button>
           <button
             onClick={() => setFilterType('low')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
               filterType === 'low'
                 ? 'bg-amber-500 border-amber-500 text-white shadow-sm'
-                : 'bg-amber-50 border-amber-200/50 text-amber-700 hover:bg-amber-100/50'
+                : 'bg-amber-50 border-amber-200/50 text-amber-750 hover:bg-amber-100/50'
             }`}
           >
-            Alerts / Low
+            Running Low
           </button>
           <button
             onClick={() => setFilterType('healthy')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
               filterType === 'healthy'
                 ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
-                : 'bg-emerald-50 border-emerald-200/50 text-emerald-700 hover:bg-emerald-100/50'
+                : 'bg-emerald-50 border-emerald-200/50 text-emerald-750 hover:bg-emerald-100/50'
             }`}
           >
-            Stable Stock
+            All Good
           </button>
         </div>
       </div>
@@ -263,7 +263,7 @@ export function InventoryPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <tr className="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-450 uppercase tracking-widest">
                   <th 
                     onClick={() => requestSort('name')}
                     className="py-4 px-6 cursor-pointer select-none hover:text-indigo-600 transition-colors"
@@ -278,7 +278,7 @@ export function InventoryPage() {
                     className="py-4 px-6 cursor-pointer select-none hover:text-indigo-600 transition-colors text-right"
                   >
                     <div className="flex items-center justify-end">
-                      Current Quantity
+                      Quantity
                       {renderSortArrow('currentStock')}
                     </div>
                   </th>
@@ -287,7 +287,7 @@ export function InventoryPage() {
                     className="py-4 px-6 cursor-pointer select-none hover:text-indigo-600 transition-colors text-right"
                   >
                     <div className="flex items-center justify-end">
-                      Reorder Threshold
+                      Restock Level
                       {renderSortArrow('reorderThreshold')}
                     </div>
                   </th>
@@ -296,7 +296,7 @@ export function InventoryPage() {
                     className="py-4 px-6 cursor-pointer select-none hover:text-indigo-600 transition-colors text-right"
                   >
                     <div className="flex items-center justify-end">
-                      Avg Daily Burn
+                      Used per day
                       {renderSortArrow('avgDailyUsage')}
                     </div>
                   </th>
@@ -305,7 +305,7 @@ export function InventoryPage() {
                     className="py-4 px-6 cursor-pointer select-none hover:text-indigo-600 transition-colors text-right"
                   >
                     <div className="flex items-center justify-end">
-                      Days Until Stockout
+                      Will run out in
                       {renderSortArrow('daysUntilStockout')}
                     </div>
                   </th>
@@ -341,24 +341,24 @@ export function InventoryPage() {
                       </td>
                       
                       {/* Reorder Threshold */}
-                      <td className="py-4.5 px-6 py-4 text-right font-semibold text-xs text-slate-400">
+                      <td className="py-4.5 px-6 py-4 text-right font-semibold text-xs text-slate-450">
                         {item.reorderThreshold.toLocaleString()}
                       </td>
 
                       {/* Avg Daily Usage */}
-                      <td className="py-4.5 px-6 py-4 text-right font-semibold text-xs text-slate-400">
-                        {item.avgDailyUsage} / day
+                      <td className="py-4.5 px-6 py-4 text-right font-semibold text-xs text-slate-450">
+                        {item.avgDailyUsage} used per day
                       </td>
                       
                       {/* Days Until Stockout */}
                       <td className="py-4.5 px-6 py-4 text-right font-extrabold text-sm">
                         {item.currentStock === 0 ? (
-                          <span className="text-rose-600 animate-pulse">0.0 (Immediate)</span>
+                          <span className="text-rose-650 animate-pulse">Out of stock</span>
                         ) : item.daysUntilStockout === 999 ? (
-                          <span className="text-slate-400 font-semibold">N/A (Stable)</span>
+                          <span className="text-slate-400 font-semibold">All Good (Stable)</span>
                         ) : (
-                          <span className={isRed ? 'text-rose-600' : isYellow ? 'text-amber-600' : 'text-emerald-600'}>
-                            {item.daysUntilStockout.toFixed(1)} days
+                          <span className={isRed ? 'text-rose-600' : isYellow ? 'text-amber-600' : 'text-emerald-650'}>
+                            Will run out in {item.daysUntilStockout.toFixed(1)} days
                           </span>
                         )}
                       </td>
@@ -377,12 +377,12 @@ export function InventoryPage() {
                           } 
                           label={
                             item.currentStock === 0 
-                              ? 'Stockout' 
+                              ? 'Unavailable' 
                               : isRed 
-                                ? 'Critical Risk' 
+                                ? 'Urgent' 
                                 : isYellow 
-                                  ? 'Reorder Alert' 
-                                  : 'Stock Healthy'
+                                  ? 'Running Low' 
+                                  : 'All Good'
                           }
                         />
                       </td>
@@ -396,7 +396,7 @@ export function InventoryPage() {
           <div className="text-center py-16 px-4">
             <Database className="w-12 h-12 text-slate-300 mx-auto mb-3" />
             <h3 className="font-bold text-slate-800 text-lg">No Inventory Items Found</h3>
-            <p className="text-slate-400 text-sm max-w-xs mx-auto mt-1">
+            <p className="text-slate-450 text-sm max-w-xs mx-auto mt-1">
               There are no catalog lines matching your filter settings or search string.
             </p>
           </div>
@@ -407,10 +407,9 @@ export function InventoryPage() {
       <div className="flex items-start space-x-3 bg-indigo-50/50 border border-indigo-150 border-indigo-100 p-4.5 rounded-2xl text-xs text-indigo-750">
         <Info className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <h5 className="font-bold text-indigo-900">Formulas & Depletion Metrics</h5>
+          <h5 className="font-bold text-indigo-900">Stock Level Calculations</h5>
           <p className="text-indigo-700/90 font-medium">
-            The <b>Days Until Stockout</b> is computed live as <code className="bg-indigo-100/80 px-1 py-0.5 rounded font-mono font-bold text-indigo-800">Current Stock / Avg Daily Burn Rate</code>. 
-            Rows highlighted in red indicate supply lines that will reach stockout within 3 days based on current burn rates and require immediate requisition orders from district reserves.
+            We calculate how many days of medicine are left based on how much is used per day. Red rows show medicines that will run out in 3 days or less and need to be restocked immediately.
           </p>
         </div>
       </div>

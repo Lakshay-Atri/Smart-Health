@@ -29,39 +29,39 @@ export function Layout({ children }) {
 
   // Renders the page title in the header based on the active path
   const getHeaderTitle = () => {
-    if (isHome) return 'District Overview';
-    if (isDetail) return 'Centre Detail Analytics';
-    if (isInventory) return 'Inventory & Stock Management';
+    if (isHome) return 'All Health Centres';
+    if (isDetail) return 'Centre Details';
+    if (isInventory) return 'Medicine Stock';
     return 'Smart Health Centre Management';
   };
 
   const navLinks = [
     {
-      name: 'District Overview',
+      name: 'All Health Centres',
       path: '/',
       icon: <Grid className="w-5 h-5" />,
       active: location.pathname === '/'
     },
     {
-      name: 'Stock Warnings',
+      name: 'Medicines Running Low',
       path: '/warnings',
       icon: <AlertTriangle className="w-5 h-5" />,
       active: location.pathname === '/warnings'
     },
     {
-      name: 'Redistribution',
+      name: 'Move Supplies',
       path: '/redistribution',
       icon: <Repeat className="w-5 h-5" />,
       active: location.pathname === '/redistribution'
     },
     {
-      name: 'Forecast',
+      name: 'Expected Patients',
       path: '/forecast',
       icon: <TrendingUp className="w-5 h-5" />,
       active: location.pathname === '/forecast'
     },
     {
-      name: 'Admin Alerts',
+      name: 'Needs Attention',
       path: '/alerts',
       icon: <Bell className="w-5 h-5" />,
       active: location.pathname === '/alerts'
@@ -72,13 +72,13 @@ export function Layout({ children }) {
   if (centreId) {
     navLinks.push(
       {
-        name: 'Centre Analytics',
+        name: 'Centre Details',
         path: `/centre/${centreId}`,
         icon: <Activity className="w-5 h-5" />,
         active: isDetail
       },
       {
-        name: 'Inventory Details',
+        name: 'Medicine Stock',
         path: `/centre/${centreId}/inventory`,
         icon: <Database className="w-5 h-5" />,
         active: isInventory
@@ -179,7 +179,7 @@ export function Layout({ children }) {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600"></span>
               </span>
-              <span className="text-[11px] font-bold text-indigo-700 uppercase tracking-wider">Real-time Sync</span>
+              <span className="text-[11px] font-bold text-indigo-700 uppercase tracking-wider">Live Updates</span>
             </div>
 
             {/* Notifications */}

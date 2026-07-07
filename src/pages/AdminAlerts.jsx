@@ -45,13 +45,13 @@ export const AdminAlerts = () => {
   const getAlertIcon = (severity) => {
     switch (severity) {
       case 'danger':
-        return <AlertOctagon className="w-5 h-5 text-rose-400 shrink-0" />;
+        return <AlertOctagon className="w-5 h-5 text-rose-600 shrink-0" />;
       case 'warning':
-        return <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />;
+        return <AlertTriangle className="w-5 h-5 text-amber-650 shrink-0" />;
       case 'info':
-        return <Info className="w-5 h-5 text-sky-400 shrink-0" />;
+        return <Info className="w-5 h-5 text-sky-650 shrink-0" />;
       default:
-        return <Bell className="w-5 h-5 text-indigo-400 shrink-0" />;
+        return <Bell className="w-5 h-5 text-indigo-600 shrink-0" />;
     }
   };
 
@@ -59,13 +59,13 @@ export const AdminAlerts = () => {
   const getAlertBorderClass = (severity) => {
     switch (severity) {
       case 'danger':
-        return 'border-l-rose-500 hover:border-rose-500/40 bg-rose-500/5';
+        return 'border-l-rose-500 hover:border-rose-600/40 bg-rose-50/50 border border-slate-150 shadow-sm';
       case 'warning':
-        return 'border-l-amber-500 hover:border-amber-500/40 bg-amber-500/5';
+        return 'border-l-amber-500 hover:border-amber-600/40 bg-amber-50/40 border border-slate-150 shadow-sm';
       case 'info':
-        return 'border-l-sky-500 hover:border-sky-500/40 bg-sky-500/5';
+        return 'border-l-sky-500 hover:border-sky-600/40 bg-sky-50/40 border border-slate-150 shadow-sm';
       default:
-        return 'border-l-indigo-500 hover:border-indigo-500/40 bg-indigo-500/5';
+        return 'border-l-indigo-500 hover:border-indigo-600/40 bg-indigo-50/40 border border-slate-150 shadow-sm';
     }
   };
 
@@ -73,7 +73,7 @@ export const AdminAlerts = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-        <p className="text-slate-400 animate-pulse text-sm">Aggregating alerts and attendance cycles...</p>
+        <p className="text-slate-500 animate-pulse text-sm">Aggregating alerts and attendance cycles...</p>
       </div>
     );
   }
@@ -83,74 +83,74 @@ export const AdminAlerts = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
-            <Bell className="text-rose-400 w-7 h-7 animate-pulse" />
-            Admin Action Centre
+          <h1 className="text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
+            <Bell className="text-rose-500 w-7 h-7 animate-pulse" />
+            Needs Attention
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Consolidated operational alerts compiled from pharmacy inventories, staffing compliance, and capacity limits.
+          <p className="text-slate-500 text-sm mt-1">
+            Important tasks and warnings that need action across all facilities.
           </p>
         </div>
 
         {/* System controls */}
         <button
           onClick={resetInteractiveStates}
-          className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-xs font-bold text-slate-350 px-3.5 py-2 rounded-lg transition-colors shadow-md outline-none"
+          className="flex items-center gap-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 px-3.5 py-2 rounded-lg transition-colors shadow-sm outline-none cursor-pointer"
         >
-          <RefreshCw className="w-3.5 h-3.5" />
+          <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
           Reset Cleared Alerts
         </button>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="glass-panel p-4 rounded-xl border border-slate-850 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white border border-slate-150 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
         <div className="flex flex-wrap items-center gap-4">
-          <span className="text-xs font-semibold text-slate-450 flex items-center gap-1.5 uppercase tracking-wide">
-            <Filter className="w-3.5 h-3.5 text-indigo-400" />
+          <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5 uppercase tracking-wide">
+            <Filter className="w-3.5 h-3.5 text-indigo-500" />
             Filter Feed
           </span>
           
           {/* Severity Filters */}
-          <div className="flex bg-slate-950 p-1 rounded-lg border border-slate-900">
+          <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-250/60">
             <button 
               onClick={() => setSeverityFilter('all')}
-              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${severityFilter === 'all' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
+              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${severityFilter === 'all' ? 'bg-indigo-600 text-white shadow' : 'text-slate-600 hover:text-slate-800'}`}
             >
               All ({alerts.length})
             </button>
             <button 
               onClick={() => setSeverityFilter('danger')}
-              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${severityFilter === 'danger' ? 'bg-rose-650 text-white shadow' : 'text-slate-450 hover:text-rose-400'}`}
+              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${severityFilter === 'danger' ? 'bg-rose-600 text-white shadow' : 'text-slate-600 hover:text-rose-700'}`}
             >
-              Critical ({alerts.filter(a => a.severity === 'danger').length})
+              Urgent ({alerts.filter(a => a.severity === 'danger').length})
             </button>
             <button 
               onClick={() => setSeverityFilter('warning')}
-              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${severityFilter === 'warning' ? 'bg-amber-650 text-white shadow' : 'text-slate-450 hover:text-amber-400'}`}
+              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${severityFilter === 'warning' ? 'bg-amber-500 text-white shadow' : 'text-slate-600 hover:text-amber-700'}`}
             >
-              Warnings ({alerts.filter(a => a.severity === 'warning').length})
+              Running Low ({alerts.filter(a => a.severity === 'warning').length})
             </button>
             <button 
               onClick={() => setSeverityFilter('info')}
-              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${severityFilter === 'info' ? 'bg-sky-650 text-white shadow' : 'text-slate-450 hover:text-sky-400'}`}
+              className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${severityFilter === 'info' ? 'bg-sky-600 text-white shadow' : 'text-slate-600 hover:text-sky-700'}`}
             >
-              Info ({alerts.filter(a => a.severity === 'info').length})
+              All Good ({alerts.filter(a => a.severity === 'info').length})
             </button>
           </div>
 
           {/* Category Select Filters */}
-          <div className="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-900">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400" />
+          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500" />
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="bg-transparent text-xs text-slate-350 border-none outline-none font-semibold cursor-pointer focus:ring-0"
+              className="bg-transparent text-xs text-slate-700 border-none outline-none font-semibold cursor-pointer focus:ring-0"
             >
-              <option value="all" className="bg-slate-900 text-slate-200">All Categories</option>
-              <option value="stock" className="bg-slate-900 text-slate-200">Stock Levels</option>
-              <option value="attendance" className="bg-slate-900 text-slate-200">Staffing</option>
-              <option value="overcrowding" className="bg-slate-900 text-slate-200">Clinic Capacity</option>
-              <option value="underused" className="bg-slate-900 text-slate-200">Facility Usage</option>
+              <option value="all" className="bg-white text-slate-800">All Categories</option>
+              <option value="stock" className="bg-white text-slate-800">Medicine Stock</option>
+              <option value="attendance" className="bg-white text-slate-800">Staffing</option>
+              <option value="overcrowding" className="bg-white text-slate-800">Bed Availability</option>
+              <option value="underused" className="bg-white text-slate-800">Patient Numbers</option>
             </select>
           </div>
         </div>
@@ -162,10 +162,10 @@ export const AdminAlerts = () => {
 
       {/* Alerts Feed */}
       {filteredAlerts.length === 0 ? (
-        <Card hoverEffect={false} className="flex flex-col items-center justify-center py-20 text-center">
-          <CheckCircle className="w-16 h-16 text-emerald-500/25 mb-4" />
-          <h3 className="text-lg font-semibold text-slate-200">System Healthy</h3>
-          <p className="text-sm text-slate-400 mt-1 max-w-sm">
+        <Card hoverEffect={false} className="flex flex-col items-center justify-center py-20 text-center bg-white border border-slate-100 shadow-sm">
+          <CheckCircle className="w-16 h-16 text-emerald-500/20 mb-4" />
+          <h3 className="text-lg font-semibold text-slate-800">All Good</h3>
+          <p className="text-sm text-slate-500 mt-1 max-w-sm">
             No alerts found matching your selected criteria. All facilities are performing inside normal operational tolerances.
           </p>
         </Card>
@@ -177,7 +177,7 @@ export const AdminAlerts = () => {
               <div 
                 key={alert.id}
                 className={`
-                  glass-panel border-l-4 rounded-r-xl p-5 flex items-start gap-4 transition-all duration-350
+                  border-l-4 rounded-r-xl p-5 flex items-start gap-4 transition-all duration-350
                   ${getAlertBorderClass(alert.severity)}
                   ${isDismissing ? 'opacity-0 translate-x-[40px] scale-95 duration-250' : 'opacity-100 translate-x-0'}
                 `}
@@ -190,15 +190,15 @@ export const AdminAlerts = () => {
                 {/* Content */}
                 <div className="flex-1 space-y-1">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="font-bold text-slate-200 text-base flex items-center gap-2">
+                    <h3 className="font-bold text-slate-800 text-base flex items-center gap-2">
                       {alert.title}
-                      <span className="text-[10px] bg-slate-950/80 px-2 py-0.5 rounded text-slate-500 font-medium border border-slate-850 capitalize">
-                        {alert.category}
+                      <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-655 font-bold border border-slate-200 capitalize">
+                        {alert.category === 'stock' ? 'Medicine Stock' : alert.category === 'overcrowding' ? 'Bed Availability' : alert.category === 'underused' ? 'Patient Numbers' : alert.category}
                       </span>
                     </h3>
-                    <span className="text-[10px] text-slate-500 font-medium font-mono">{alert.centreName}</span>
+                    <span className="text-[10px] text-slate-550 font-bold font-mono">{alert.centreName}</span>
                   </div>
-                  <p className="text-sm text-slate-400 leading-relaxed max-w-4xl">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-4xl">
                     {alert.explanation}
                   </p>
                 </div>
@@ -206,7 +206,7 @@ export const AdminAlerts = () => {
                 {/* Dismiss button */}
                 <button
                   onClick={() => handleDismiss(alert.id)}
-                  className="bg-slate-950/60 hover:bg-slate-900 hover:text-rose-400 border border-slate-850/60 text-slate-500 p-2 rounded-lg transition-colors outline-none cursor-pointer self-center"
+                  className="bg-slate-105 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 border border-slate-200 text-slate-500 p-2 rounded-lg transition-colors outline-none cursor-pointer self-center"
                   title="Dismiss alert"
                 >
                   <Trash2 className="w-4 h-4" />

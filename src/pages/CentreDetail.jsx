@@ -141,13 +141,13 @@ export function CentreDetail() {
               className="inline-flex items-center text-xs font-bold text-slate-400 hover:text-indigo-600 uppercase tracking-wider transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-              District
+              All Health Centres
             </Link>
-            <span className="text-slate-350 text-xs">/</span>
+            <span className="text-slate-355 text-xs">/</span>
             <span className="text-indigo-600 text-xs font-bold uppercase tracking-wider">{centre.name}</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">{centre.name}</h2>
-          <p className="text-slate-400 text-sm font-medium">{centre.location}</p>
+          <p className="text-slate-500 text-sm font-medium">{centre.location}</p>
         </div>
 
         {/* Action Header Button */}
@@ -156,43 +156,43 @@ export function CentreDetail() {
           className="inline-flex items-center justify-center space-x-2 px-5 py-3 bg-white text-indigo-600 hover:text-indigo-700 border border-slate-100 hover:border-indigo-100/50 rounded-2xl font-bold shadow-sm hover:shadow-md transition-all text-sm"
         >
           <Database className="w-4 h-4 text-indigo-500" />
-          <span>Go to Stock Sheet</span>
+          <span>Go to Medicine Stock</span>
           <ChevronRight className="w-4 h-4 text-indigo-400" />
         </Link>
       </div>
 
       {/* Metric Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Bed Utilization Card */}
-        <Card title="Bed Occupancy" icon={<Bed className="w-5 h-5 text-indigo-500" />}>
+        {/* Bed Availability Card */}
+        <Card title="Bed Availability" icon={<Bed className="w-5 h-5 text-indigo-500" />}>
           <div className="flex items-center justify-between mt-2">
             <div className="space-y-1">
-              <span className="text-3xl font-extrabold text-slate-800">{bedOccupancyPercent}%</span>
-              <span className="text-xs text-slate-400 font-semibold block">{centre.occupiedBeds} of {centre.totalBeds} beds occupied</span>
+              <span className="text-3xl font-extrabold text-slate-800">{centre.totalBeds - centre.occupiedBeds} free</span>
+              <span className="text-xs text-slate-400 font-semibold block whitespace-nowrap">{centre.totalBeds - centre.occupiedBeds} of {centre.totalBeds} beds available</span>
             </div>
             <div className="relative flex items-center justify-center">
-              {/* Simple Circular Progress */}
+              {/* Circular Progress */}
               <svg className="w-16 h-16 transform -rotate-90">
                 <circle cx="32" cy="32" r="26" stroke="#f1f5f9" strokeWidth="6" fill="transparent" />
                 <circle 
                   cx="32" 
                   cy="32" 
                   r="26" 
-                  stroke={bedOccupancyPercent > 80 ? '#ef4444' : '#6366f1'} 
+                  stroke={(centre.totalBeds - centre.occupiedBeds) / centre.totalBeds < 0.2 ? '#ef4444' : '#6366f1'} 
                   strokeWidth="6" 
                   fill="transparent" 
                   strokeDasharray={163.3}
-                  strokeDashoffset={163.3 - (163.3 * bedOccupancyPercent) / 100}
+                  strokeDashoffset={163.3 - (163.3 * (centre.totalBeds - centre.occupiedBeds)) / (centre.totalBeds || 1)}
                   className="transition-all duration-700 ease-out"
                 />
               </svg>
-              <span className="absolute text-[10px] font-bold text-slate-600">{centre.totalBeds - centre.occupiedBeds} free</span>
+              <span className="absolute text-[10px] font-bold text-slate-650">{centre.totalBeds - centre.occupiedBeds} free</span>
             </div>
           </div>
         </Card>
 
         {/* Doctor Duty Card */}
-        <Card title="Roster Status" icon={<Stethoscope className="w-5 h-5 text-indigo-500" />}>
+        <Card title="Doctors Present" icon={<Stethoscope className="w-5 h-5 text-indigo-500" />}>
           <div className="flex items-center justify-between mt-2">
             <div className="space-y-1">
               <span className="text-3xl font-extrabold text-slate-800">
@@ -207,13 +207,13 @@ export function CentreDetail() {
         </Card>
 
         {/* Low Stock Threats Card */}
-        <Card title="Supply Risk Alerts" icon={<AlertTriangle className="w-5 h-5 text-indigo-500" />}>
+        <Card title="Medicines Running Low" icon={<AlertTriangle className="w-5 h-5 text-indigo-500" />}>
           <div className="flex items-center justify-between mt-2">
             <div className="space-y-1">
               <span className={`text-3xl font-extrabold ${lowStockItems.length > 0 ? 'text-rose-600 animate-pulse' : 'text-slate-800'}`}>
                 {lowStockItems.length}
               </span>
-              <span className="text-xs text-slate-400 font-semibold block">Supply items below threshold</span>
+              <span className="text-xs text-slate-400 font-semibold block">Items running low</span>
             </div>
             <div className={`p-3.5 rounded-2xl border ${
               lowStockItems.length > 0 
@@ -380,12 +380,12 @@ export function CentreDetail() {
         </Card>
 
         {/* Quick Inventory Alert List */}
-        <Card title="Supply Health Risk Summary" icon={<Database className="w-5 h-5 text-indigo-500" />} className="lg:col-span-2">
+        <Card title="Medicines Running Low" icon={<Database className="w-5 h-5 text-indigo-500" />} className="lg:col-span-2">
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Critical & Low Stock Items</span>
-              <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-100/30">
-                {lowStockItems.length} items flagged
+              <span className="text-[11px] font-bold text-slate-450 uppercase tracking-wider">Medicines Running Low</span>
+              <span className="text-xs font-semibold text-indigo-650 bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-100/30">
+                {lowStockItems.length} items need attention
               </span>
             </div>
 
@@ -411,13 +411,13 @@ export function CentreDetail() {
                         <span className="text-sm font-bold text-slate-800 truncate pr-2">{item.name}</span>
                         <StatusBadge 
                           status={isCritical ? 'red' : 'yellow'} 
-                          label={isOut ? 'Stockout' : isCritical ? 'Critical' : 'Low Stock'}
+                          label={isOut ? 'Unavailable' : isCritical ? 'Urgent' : 'Running Low'}
                         />
                       </div>
                       <div className="flex justify-between items-baseline mt-3">
-                        <span className="text-xs text-slate-400 font-medium">Stock: <b className="text-slate-700 font-bold">{item.currentStock}</b></span>
-                        <span className="text-xs text-slate-500 font-semibold bg-white px-2 py-0.5 rounded-lg border border-slate-100 shadow-sm">
-                          {isOut ? 'Stockout' : `${days.toFixed(1)} days left`}
+                        <span className="text-xs text-slate-500 font-medium">Stock: <b className="text-slate-700 font-bold">{item.currentStock}</b></span>
+                        <span className="text-xs text-slate-650 font-semibold bg-white px-2 py-0.5 rounded-lg border border-slate-100 shadow-sm">
+                          {isOut ? 'Out of stock' : `Will run out in ${days.toFixed(1)} days`}
                         </span>
                       </div>
                     </div>
@@ -425,18 +425,18 @@ export function CentreDetail() {
                 })}
               </div>
             ) : (
-              <div className="text-center py-12 text-slate-400 text-sm border border-dashed border-slate-200 rounded-2xl">
+              <div className="text-center py-12 text-slate-450 text-sm border border-dashed border-slate-200 rounded-2xl">
                 <Database className="w-8 h-8 text-slate-350 mx-auto mb-2" />
-                No supply threats! All stock lines are healthy and above reorder levels.
+                All Good! All medicine stock is healthy and above restock levels.
               </div>
             )}
 
             <div className="pt-2 flex justify-end">
               <Link 
                 to={`/centre/${centreId}/inventory`}
-                className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center hover:underline"
+                className="text-xs font-bold text-indigo-650 hover:text-indigo-750 flex items-center hover:underline"
               >
-                Open detailed stock spreadsheet
+                Open detailed stock sheet
                 <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
               </Link>
             </div>

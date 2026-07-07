@@ -107,8 +107,8 @@ export function HealthCentreProvider({ children }) {
             if (!dismissedAlerts.has(alertId)) {
               list.push({
                 id: alertId,
-                title: `Critical Stock-out: ${item.name}`,
-                explanation: `${centre.name} is running dangerously low on ${item.name}. There are only ${item.currentStock} units remaining (approx. ${days.toFixed(1)} days of stock).`,
+                title: `Urgent: ${item.name} running out`,
+                explanation: `${centre.name} is running dangerously low on ${item.name}. There are only ${item.currentStock} units remaining (will run out in ${days.toFixed(1)} days).`,
                 severity: 'danger',
                 category: 'stock',
                 centreName: centre.name,
@@ -119,8 +119,8 @@ export function HealthCentreProvider({ children }) {
             if (!dismissedAlerts.has(alertId)) {
               list.push({
                 id: alertId,
-                title: `Low Stock Warning: ${item.name}`,
-                explanation: `${centre.name} stock level for ${item.name} is at ${item.currentStock} units (estimated ${days.toFixed(1)} days remaining). Reorder threshold is ${item.reorderThreshold} units.`,
+                title: `Running Low: ${item.name}`,
+                explanation: `${centre.name} stock level for ${item.name} is at ${item.currentStock} units (will run out in ${days.toFixed(1)} days). Restock level is ${item.reorderThreshold} units.`,
                 severity: 'warning',
                 category: 'stock',
                 centreName: centre.name,
@@ -151,8 +151,8 @@ export function HealthCentreProvider({ children }) {
           if (!dismissedAlerts.has(alertId)) {
             list.push({
               id: alertId,
-              title: `Understaffed Duty Warning`,
-              explanation: `${centre.name} is running at reduced physician capacity (${checkedInCount}/${totalDoctors} present). Longer waiting lines expected.`,
+              title: `Running Low: Fewer doctors present`,
+              explanation: `${centre.name} has fewer doctors present today (${checkedInCount} of ${totalDoctors} checked in). You may experience longer waiting times.`,
               severity: 'warning',
               category: 'attendance',
               centreName: centre.name,
@@ -169,8 +169,8 @@ export function HealthCentreProvider({ children }) {
           if (!dismissedAlerts.has(alertId)) {
             list.push({
               id: alertId,
-              title: `Critical Bed Capacity`,
-              explanation: `${centre.name} has reached ${Math.round(occupancyRate * 100)}% bed occupancy (${centre.occupiedBeds}/${centre.totalBeds} beds occupied). Transfer incoming admissions if possible.`,
+              title: `Urgent: Very Few Beds Available`,
+              explanation: `${centre.name} has only ${centre.totalBeds - centre.occupiedBeds} of ${centre.totalBeds} beds available. Please consider transferring new patients.`,
               severity: 'danger',
               category: 'overcrowding',
               centreName: centre.name,
@@ -181,8 +181,8 @@ export function HealthCentreProvider({ children }) {
           if (!dismissedAlerts.has(alertId)) {
             list.push({
               id: alertId,
-              title: `High Bed Capacity Alert`,
-              explanation: `${centre.name} bed occupancy is currently high at ${Math.round(occupancyRate * 100)}% (${centre.occupiedBeds}/${centre.totalBeds} beds occupied).`,
+              title: `Running Low: Few Beds Available`,
+              explanation: `${centre.name} has only ${centre.totalBeds - centre.occupiedBeds} of ${centre.totalBeds} beds available.`,
               severity: 'warning',
               category: 'overcrowding',
               centreName: centre.name,

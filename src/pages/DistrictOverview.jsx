@@ -41,9 +41,9 @@ function CentreCard({ centre, onClick, onMetricsResolved }) {
   }, [centre.id]);
 
   // Compute metrics
-  // 1. Stock Health (Green/Yellow/Red)
+  // 1. Stock Health
   const computeStockStatus = () => {
-    if (stock.length === 0) return { status: 'green', label: 'Healthy' };
+    if (stock.length === 0) return { status: 'green', label: 'All Good' };
     
     let hasCritical = false; // daysUntilStockout < 3
     let hasWarning = false; // currentStock <= reorderThreshold
@@ -57,9 +57,9 @@ function CentreCard({ centre, onClick, onMetricsResolved }) {
       }
     });
 
-    if (hasCritical) return { status: 'red', label: 'Critical Stock' };
-    if (hasWarning) return { status: 'yellow', label: 'Low Stock' };
-    return { status: 'green', label: 'Healthy Stock' };
+    if (hasCritical) return { status: 'red', label: 'Urgent' };
+    if (hasWarning) return { status: 'yellow', label: 'Running Low' };
+    return { status: 'green', label: 'All Good' };
   };
 
   const stockInfo = computeStockStatus();
@@ -68,15 +68,16 @@ function CentreCard({ centre, onClick, onMetricsResolved }) {
   const todayStr = new Date().toISOString().split('T')[0];
   const todayFootfall = footfall[todayStr]?.patientCount ?? 0;
 
-  // 3. Bed Occupancy %
-  const bedOccupancyPercent = centre.totalBeds > 0 
-    ? Math.round((centre.occupiedBeds / centre.totalBeds) * 100) 
+  // 3. Bed Availability
+  const availableBeds = centre.totalBeds - centre.occupiedBeds;
+  const bedAvailabilityPercent = centre.totalBeds > 0 
+    ? Math.round((availableBeds / centre.totalBeds) * 100) 
     : 0;
 
   // 4. Doctor Attendance
   const checkedInCount = attendance.filter(doc => doc.checkedIn).length;
   const totalDoctors = attendance.length;
-  const doctorStatusText = totalDoctors > 0 ? `${checkedInCount}/${totalDoctors} Active` : 'No Doctor Roster';
+  const doctorStatusText = totalDoctors > 0 ? `${checkedInCount}/${totalDoctors} Checked In` : 'No Doctor Roster';
   const doctorAttendanceStatus = checkedInCount > 0 ? 'checkedin' : 'checkedout';
 
   // Bubble resolved status to parent for parent-level statistics aggregation
@@ -96,7 +97,7 @@ function CentreCard({ centre, onClick, onMetricsResolved }) {
   return (
     <Card 
       onClick={onClick}
-      className="overflow-hidden hover:scale-[1.02] active:scale-[0.98]"
+      className="overflow-hidden hover:scale-[1.02] active:scale-[0.98] bg-white border-slate-100 shadow-sm"
     >
       <div className="flex flex-col space-y-4">
         {/* Card Title & Location */}
@@ -105,8 +106,8 @@ function CentreCard({ centre, onClick, onMetricsResolved }) {
             <h4 className="font-bold text-slate-800 text-lg group-hover:text-indigo-600 transition-colors">
               {centre.name}
             </h4>
-            <div className="flex items-center text-xs text-slate-400 font-medium">
-              <MapPin className="w-3.5 h-3.5 mr-1 text-slate-400" />
+            <div className="flex items-center text-xs text-slate-400 font-semibold">
+              <MapPin className="w-3.5 h-3.5 mr-1 text-slate-450" />
               {centre.location}
             </div>
           </div>
@@ -119,7 +120,7 @@ function CentreCard({ centre, onClick, onMetricsResolved }) {
         <div className="grid grid-cols-2 gap-3 text-sm">
           {/* Footfall */}
           <div className="p-3 bg-slate-50/50 rounded-xl border border-slate-100/50 flex flex-col justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Footfall Today</span>
+            <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wide">Patients Today</span>
             <div className="flex items-baseline space-x-1.5 mt-1.5">
               <span className="text-xl font-bold text-slate-800">{todayFootfall}</span>
               <span className="text-[10px] text-slate-400 font-semibold">patients</span>
@@ -128,7 +129,7 @@ function CentreCard({ centre, onClick, onMetricsResolved }) {
 
           {/* Doctor Attendance */}
           <div className="p-3 bg-slate-50/50 rounded-xl border border-slate-100/50 flex flex-col justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Doctors On Duty</span>
+            <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wide">Doctors Present</span>
             <div className="mt-1.5 flex items-center justify-between">
               <span className="text-sm font-bold text-slate-800">{doctorStatusText}</span>
               <span className={`w-2.5 h-2.5 rounded-full ${checkedInCount > 0 ? 'bg-emerald-500' : 'bg-rose-500'} animate-pulse-subtle`}></span>
@@ -138,17 +139,17 @@ function CentreCard({ centre, onClick, onMetricsResolved }) {
 
         {/* Bed occupancy progress */}
         <div className="space-y-1.5">
-          <div className="flex justify-between text-xs font-bold uppercase tracking-wide text-slate-400">
-            <span>Bed Occupancy</span>
-            <span className="text-slate-700">{bedOccupancyPercent}% ({centre.occupiedBeds}/{centre.totalBeds})</span>
+          <div className="flex justify-between text-[10px] font-bold uppercase tracking-wide text-slate-450">
+            <span>Bed Availability</span>
+            <span className="text-slate-700 whitespace-nowrap">{availableBeds} of {centre.totalBeds} beds available</span>
           </div>
           <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
             <div 
-              style={{ width: `${bedOccupancyPercent}%` }}
+              style={{ width: `${bedAvailabilityPercent}%` }}
               className={`h-full rounded-full transition-all duration-500 ${
-                bedOccupancyPercent > 85 
+                bedAvailabilityPercent < 15 
                   ? 'bg-rose-500' 
-                  : bedOccupancyPercent > 60 
+                  : bedAvailabilityPercent < 40 
                     ? 'bg-amber-500' 
                     : 'bg-emerald-500'
               }`}
@@ -230,9 +231,9 @@ export function DistrictOverview() {
         <div className="absolute right-0 top-0 transform translate-x-12 -translate-y-12 w-64 h-64 bg-indigo-500 rounded-full blur-3xl opacity-10 pointer-events-none"></div>
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
           <div className="space-y-1">
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">District Healthcare Control</h2>
+            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">All Health Centres</h2>
             <p className="text-indigo-200 text-sm max-w-lg">
-              Live operational metrics, bed availability inventories, and stock statuses across all health clinics in your district.
+              Live updates on available beds, medicine stock levels, and active doctors for all health centres in your district.
             </p>
           </div>
           <div className="flex items-center space-x-2 text-xs bg-slate-900/60 border border-slate-800/80 px-4 py-2.5 rounded-2xl">
@@ -245,10 +246,10 @@ export function DistrictOverview() {
       {/* Aggregate metrics grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric Card: Total Centres */}
-        <Card className="!p-0 border-l-4 border-l-indigo-500">
+        <Card className="!p-0 border-l-4 border-l-indigo-500 bg-white">
           <div className="p-5 flex items-center justify-between">
             <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Active Centres</span>
+              <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest block">Active Centres</span>
               <span className="text-3xl font-extrabold text-slate-800 block">{totalCentresCount}</span>
             </div>
             <div className="bg-indigo-50 p-3 rounded-2xl border border-indigo-100/40 text-indigo-500">
@@ -258,10 +259,10 @@ export function DistrictOverview() {
         </Card>
 
         {/* Metric Card: Total Today Patients */}
-        <Card className="!p-0 border-l-4 border-l-emerald-500">
+        <Card className="!p-0 border-l-4 border-l-emerald-500 bg-white">
           <div className="p-5 flex items-center justify-between">
             <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Patients Today</span>
+              <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest block">Patients Today</span>
               <span className="text-3xl font-extrabold text-slate-800 block">{aggregatedStats.totalFootfall}</span>
             </div>
             <div className="bg-emerald-50 p-3 rounded-2xl border border-emerald-100/40 text-emerald-500">
@@ -271,26 +272,28 @@ export function DistrictOverview() {
         </Card>
 
         {/* Metric Card: Bed Occupancy */}
-        <Card className="!p-0 border-l-4 border-l-amber-500">
-          <div className="p-5 flex items-center justify-between">
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">District Bed Util.</span>
-              <div className="flex items-baseline space-x-1">
-                <span className="text-3xl font-extrabold text-slate-800">{bedOccupancyRate}%</span>
-                <span className="text-[10px] font-bold text-slate-400">({aggregatedStats.occupiedBeds}/{aggregatedStats.totalBeds})</span>
+        <Card className="!p-0 border-l-4 border-l-amber-500 bg-white">
+          <div className="p-5 flex items-center justify-between gap-4">
+            <div className="space-y-1.5 min-w-0">
+              <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest block">Beds Available</span>
+              <div className="flex flex-wrap items-baseline gap-x-1">
+                <span className="text-xl font-extrabold text-slate-800 whitespace-nowrap">
+                  {aggregatedStats.totalBeds - aggregatedStats.occupiedBeds} of {aggregatedStats.totalBeds}
+                </span>
+                <span className="text-[10px] font-bold text-slate-450 whitespace-nowrap">available</span>
               </div>
             </div>
-            <div className="bg-amber-50 p-3 rounded-2xl border border-amber-100/40 text-amber-500">
+            <div className="bg-amber-50 p-3 rounded-2xl border border-amber-100/40 text-amber-500 shrink-0">
               <Bed className="w-6 h-6" />
             </div>
           </div>
         </Card>
 
         {/* Metric Card: Critical Stock */}
-        <Card className="!p-0 border-l-4 border-l-rose-500">
+        <Card className="!p-0 border-l-4 border-l-rose-500 bg-white">
           <div className="p-5 flex items-center justify-between">
             <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Stock Outages</span>
+              <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest block">Medicines Running Low</span>
               <span className="text-3xl font-extrabold text-slate-800 block">{aggregatedStats.criticalStockCount} centres</span>
             </div>
             <div className={`p-3 rounded-2xl border ${aggregatedStats.criticalStockCount > 0 ? 'bg-rose-50 border-rose-100 text-rose-500 animate-pulse' : 'bg-slate-50 border-slate-100 text-slate-400'}`}>
@@ -304,10 +307,10 @@ export function DistrictOverview() {
       <div className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-450" />
           <input
             type="text"
-            placeholder="Search by centre name or location..."
+            placeholder="Search by health centre name or location..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-medium transition-all"
@@ -316,49 +319,49 @@ export function DistrictOverview() {
 
         {/* Status Filters */}
         <div className="flex items-center space-x-2 overflow-x-auto pb-1 md:pb-0">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center mr-1">
+          <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wider flex items-center mr-1">
             <ListFilter className="w-3.5 h-3.5 mr-1" />
-            Filter Stock:
+            Filter Stock Status:
           </span>
           <button
             onClick={() => setStatusFilter('all')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
               statusFilter === 'all'
-                ? 'bg-slate-850 bg-slate-900 border-slate-900 text-white'
+                ? 'bg-slate-900 border-slate-900 text-white'
                 : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
             }`}
           >
-            All Centres
+            All Health Centres
           </button>
           <button
             onClick={() => setStatusFilter('green')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
               statusFilter === 'green'
                 ? 'bg-emerald-600 border-emerald-600 text-white'
-                : 'bg-emerald-50 border-emerald-200/50 text-emerald-700 hover:bg-emerald-100/50'
+                : 'bg-emerald-50 border-emerald-200/50 text-emerald-750 hover:bg-emerald-100/50'
             }`}
           >
-            Healthy Stock
+            All Good
           </button>
           <button
             onClick={() => setStatusFilter('yellow')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
               statusFilter === 'yellow'
                 ? 'bg-amber-500 border-amber-500 text-white'
-                : 'bg-amber-50 border-amber-200/50 text-amber-700 hover:bg-amber-100/50'
+                : 'bg-amber-50 border-amber-200/50 text-amber-750 hover:bg-amber-100/50'
             }`}
           >
-            Low Stock
+            Running Low
           </button>
           <button
             onClick={() => setStatusFilter('red')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
               statusFilter === 'red'
                 ? 'bg-rose-500 border-rose-500 text-white'
-                : 'bg-rose-50 border-rose-200/50 text-rose-700 hover:bg-rose-100/50'
+                : 'bg-rose-50 border-rose-200/50 text-rose-750 hover:bg-rose-100/50'
             }`}
           >
-            Critical Stock
+            Urgent
           </button>
         </div>
       </div>
