@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
-import { 
-  Activity, 
-  Grid, 
-  Database, 
-  Bell, 
-  Menu, 
-  X, 
-  Hospital, 
-  Heart, 
-  FileText,
-  ChevronLeft
-} from 'lucide-react';
+import {
+    Activity,
+    Grid,
+    Database,
+    Bell,
+    Menu,
+    X,
+    Hospital,
+    Heart,
+    FileText,
+    ChevronLeft,
+    AlertTriangle,
+    Repeat,
+    TrendingUp
+  } from 'lucide-react';
 
 export function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -37,7 +40,31 @@ export function Layout({ children }) {
       name: 'District Overview',
       path: '/',
       icon: <Grid className="w-5 h-5" />,
-      active: isHome
+      active: location.pathname === '/'
+    },
+    {
+      name: 'Stock Warnings',
+      path: '/warnings',
+      icon: <AlertTriangle className="w-5 h-5" />,
+      active: location.pathname === '/warnings'
+    },
+    {
+      name: 'Redistribution',
+      path: '/redistribution',
+      icon: <Repeat className="w-5 h-5" />,
+      active: location.pathname === '/redistribution'
+    },
+    {
+      name: 'Forecast',
+      path: '/forecast',
+      icon: <TrendingUp className="w-5 h-5" />,
+      active: location.pathname === '/forecast'
+    },
+    {
+      name: 'Admin Alerts',
+      path: '/alerts',
+      icon: <Bell className="w-5 h-5" />,
+      active: location.pathname === '/alerts'
     }
   ];
 
@@ -62,9 +89,8 @@ export function Layout({ children }) {
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
       {/* Sidebar for Desktop */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:flex md:flex-col ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:flex md:flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
         {/* Brand Header */}
         <div className="flex items-center justify-between px-6 py-5 bg-slate-950/40 border-b border-slate-800/60">
           <div className="flex items-center space-x-3">
@@ -89,11 +115,10 @@ export function Layout({ children }) {
               key={link.path}
               to={link.path}
               onClick={() => setSidebarOpen(false)}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-150 ${
-                link.active
-                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
-              }`}
+              className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-150 ${link.active
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+                : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                }`}
             >
               {link.icon}
               <span>{link.name}</span>
@@ -174,10 +199,10 @@ export function Layout({ children }) {
           </div>
         </main>
       </div>
-      
+
       {/* Mobile Sidebar overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
