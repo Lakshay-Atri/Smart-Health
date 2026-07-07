@@ -42,7 +42,7 @@ const db = admin.firestore();
 const mockHospitals = [
   {
     id: "hospital_1",
-    name: "St. Jude General Hospital",
+    name: "Bhatkal Taluka Hospital ",
     patientCount: 180,
     beds: { total: 250, occupied: 180, available: 70 },
     doctors: { total: 45, present: 38, attendanceRate: 84.4 },
@@ -126,7 +126,7 @@ const mockHospitals = [
   },
   {
     id: "hospital_2",
-    name: "Metro Health Medical Center",
+    name: "Life Care Bhatkal",
     patientCount: 420,
     beds: { total: 500, occupied: 420, available: 80 },
     doctors: { total: 120, present: 105, attendanceRate: 87.5 },
@@ -210,7 +210,7 @@ const mockHospitals = [
   },
   {
     id: "hospital_3",
-    name: "City Children's Clinic",
+    name: "Ambedkar International Hospital",
     patientCount: 45,
     beds: { total: 100, occupied: 45, available: 55 },
     doctors: { total: 25, present: 22, attendanceRate: 88.0 },
@@ -279,7 +279,7 @@ const mockHospitals = [
   },
   {
     id: "hospital_4",
-    name: "Hope Psychiatric Hospital",
+    name: "Apollo International",
     patientCount: 135,
     beds: { total: 150, occupied: 135, available: 15 },
     doctors: { total: 30, present: 25, attendanceRate: 83.3 },

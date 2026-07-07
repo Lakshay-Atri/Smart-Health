@@ -1,10 +1,10 @@
 // Mock database seed and simulation logic for Smart Health Centres
 export const initialCentres = {
-  'c-1': { id: 'c-1', name: 'Metro Health Hub', location: 'District Sector 4', totalBeds: 120, occupiedBeds: 82 },
-  'c-2': { id: 'c-2', name: 'Valley Community Clinic', location: 'North Ridge', totalBeds: 45, occupiedBeds: 18 },
-  'c-3': { id: 'c-3', name: 'Riverside Medical Outpost', location: 'East Bank Delta', totalBeds: 25, occupiedBeds: 22 },
-  'c-4': { id: 'c-4', name: 'Summit Wellness Centre', location: 'Highland Ridge', totalBeds: 60, occupiedBeds: 41 },
-  'c-5': { id: 'c-5', name: 'Forest Ridge Care Point', location: 'South Woods', totalBeds: 30, occupiedBeds: 12 }
+  'c-1': { id: 'c-1', name: 'Bhatkal Taluka Hospital', location: 'District Sector 4', totalBeds: 120, occupiedBeds: 82 },
+  'c-2': { id: 'c-2', name: 'Life Care Bhatkal', location: 'North Ridge', totalBeds: 45, occupiedBeds: 18 },
+  'c-3': { id: 'c-3', name: 'Ambedkar International Hospital', location: 'East Bank Delta', totalBeds: 25, occupiedBeds: 22 },
+  'c-4': { id: 'c-4', name: 'Apollo International', location: 'Highland Ridge', totalBeds: 60, occupiedBeds: 41 },
+  'c-5': { id: 'c-5', name: 'Grace Maternity & Surgical Center', location: 'South Woods', totalBeds: 30, occupiedBeds: 12 }
 };
 
 export const initialStock = {
