@@ -1,10 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { 
+  db,
   subscribeToCentres, 
   subscribeToStock, 
   subscribeToFootfall, 
   subscribeToAttendance 
 } from '../db/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { initialCentres, initialStock, initialFootfall, initialAttendance } from '../db/mockData';
 
 const HealthCentreContext = createContext();
 
@@ -18,18 +21,78 @@ export function HealthCentreProvider({ children }) {
   const [dismissedAlerts, setDismissedAlerts] = useState(new Set());
   const [actionedSuggestions, setActionedSuggestions] = useState(new Set());
 
+  const [useLocalMock, setUseLocalMock] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+
+  // Client-side Firestore database seeder
+  const seedDatabase = useCallback(async () => {
+    if (!db) return;
+    setSeeding(true);
+    try {
+      for (const [centreId, centre] of Object.entries(initialCentres)) {
+        // 1. Write centre doc
+        const centreRef = doc(db, 'centres', centreId);
+        await setDoc(centreRef, {
+          name: centre.name,
+          location: centre.location,
+          totalBeds: centre.totalBeds,
+          occupiedBeds: centre.occupiedBeds,
+          bedsTotal: centre.totalBeds,
+          bedsOccupied: centre.occupiedBeds
+        });
+
+        // 2. Write stock items
+        const stockItems = initialStock[centreId] || {};
+        for (const [itemId, item] of Object.entries(stockItems)) {
+          const itemRef = doc(db, 'stock', centreId, 'items', itemId);
+          await setDoc(itemRef, {
+            name: item.name,
+            currentStock: item.currentStock,
+            avgDailyUsage: item.avgDailyUsage,
+            reorderThreshold: item.reorderThreshold
+          });
+        }
+
+        // 3. Write footfall records
+        const footfallRecords = initialFootfall[centreId] || {};
+        for (const [date, record] of Object.entries(footfallRecords)) {
+          const recordRef = doc(db, 'footfall', centreId, 'records', date);
+          await setDoc(recordRef, {
+            patientCount: record.patientCount
+          });
+        }
+
+        // 4. Write attendance records
+        const attendanceRecords = initialAttendance[centreId] || [];
+        for (let i = 0; i < attendanceRecords.length; i++) {
+          const recId = `rec_${i + 1}`;
+          const recRef = doc(db, 'attendance', centreId, 'records', recId);
+          await setDoc(recRef, {
+            doctorId: attendanceRecords[i].doctorId,
+            checkedIn: attendanceRecords[i].checkedIn
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error seeding database:', error);
+      throw error;
+    } finally {
+      setSeeding(false);
+    }
+  }, []);
+
   // 1. Subscribe to centres
   useEffect(() => {
     let isMounted = true;
     const unsubCentres = subscribeToCentres((centresList) => {
       if (!isMounted) return;
       setCentres(centresList);
-    });
+    }, useLocalMock);
     return () => {
       isMounted = false;
       unsubCentres();
     };
-  }, []);
+  }, [useLocalMock]);
 
   // 2. Subscribe to sub-collections for each centre
   useEffect(() => {
@@ -50,7 +113,7 @@ export function HealthCentreProvider({ children }) {
             [centre.id]: centreStockObj,
           };
         });
-      });
+      }, useLocalMock);
       unsubs.push(unsubStock);
 
       // Subscribe to footfall
@@ -68,7 +131,7 @@ export function HealthCentreProvider({ children }) {
             [centre.id]: sortedArray,
           };
         });
-      });
+      }, useLocalMock);
       unsubs.push(unsubFootfall);
 
       // Subscribe to attendance
@@ -77,7 +140,7 @@ export function HealthCentreProvider({ children }) {
           ...prev,
           [centre.id]: attendanceList,
         }));
-      });
+      }, useLocalMock);
       unsubs.push(unsubAttendance);
     });
 
@@ -87,7 +150,7 @@ export function HealthCentreProvider({ children }) {
     return () => {
       unsubs.forEach((unsub) => unsub());
     };
-  }, [centres]);
+  }, [centres, useLocalMock]);
 
   // 3. Dynamically compute alerts from current states
   const alerts = useMemo(() => {
@@ -162,15 +225,17 @@ export function HealthCentreProvider({ children }) {
       }
 
       // C. Bed capacity alerts
-      if (centre.totalBeds > 0) {
-        const occupancyRate = centre.occupiedBeds / centre.totalBeds;
+      const totalBeds = centre.totalBeds ?? centre.bedsTotal ?? 0;
+      const occupiedBeds = centre.occupiedBeds ?? centre.bedsOccupied ?? 0;
+      if (totalBeds > 0) {
+        const occupancyRate = occupiedBeds / totalBeds;
         if (occupancyRate >= 0.9) {
           const alertId = `alert-capacity-danger-${centre.id}`;
           if (!dismissedAlerts.has(alertId)) {
             list.push({
               id: alertId,
               title: `Urgent: Very Few Beds Available`,
-              explanation: `${centre.name} has only ${centre.totalBeds - centre.occupiedBeds} of ${centre.totalBeds} beds available. Please consider transferring new patients.`,
+              explanation: `${centre.name} has only ${totalBeds - occupiedBeds} of ${totalBeds} beds available. Please consider transferring new patients.`,
               severity: 'danger',
               category: 'overcrowding',
               centreName: centre.name,
@@ -182,7 +247,7 @@ export function HealthCentreProvider({ children }) {
             list.push({
               id: alertId,
               title: `Running Low: Few Beds Available`,
-              explanation: `${centre.name} has only ${centre.totalBeds - centre.occupiedBeds} of ${centre.totalBeds} beds available.`,
+              explanation: `${centre.name} has only ${totalBeds - occupiedBeds} of ${totalBeds} beds available.`,
               severity: 'warning',
               category: 'overcrowding',
               centreName: centre.name,
@@ -378,8 +443,12 @@ export function HealthCentreProvider({ children }) {
       dismissAlert,
       actionSuggestion,
       resetInteractiveStates,
+      useLocalMock,
+      setUseLocalMock,
+      seeding,
+      seedDatabase
     }),
-    [centres, stock, footfall, attendance, loading, alerts, suggestions]
+    [centres, stock, footfall, attendance, loading, alerts, suggestions, useLocalMock, seeding, seedDatabase]
   );
 
   return (

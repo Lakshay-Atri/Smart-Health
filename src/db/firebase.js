@@ -45,8 +45,8 @@ if (isFirebaseConfigured) {
 /**
  * Subscribes to all health centres
  */
-export function subscribeToCentres(callback) {
-  if (!db) {
+export function subscribeToCentres(callback, forceMock = false) {
+  if (!db || forceMock) {
     return liveMockDb.subscribe('centres', null, callback);
   }
 
@@ -71,8 +71,8 @@ export function subscribeToCentres(callback) {
 /**
  * Subscribes to inventory stock items of a specific health centre
  */
-export function subscribeToStock(centreId, callback) {
-  if (!db) {
+export function subscribeToStock(centreId, callback, forceMock = false) {
+  if (!db || forceMock) {
     return liveMockDb.subscribe('stock', centreId, callback);
   }
 
@@ -96,8 +96,8 @@ export function subscribeToStock(centreId, callback) {
 /**
  * Subscribes to footfall history for a specific centre
  */
-export function subscribeToFootfall(centreId, callback) {
-  if (!db) {
+export function subscribeToFootfall(centreId, callback, forceMock = false) {
+  if (!db || forceMock) {
     return liveMockDb.subscribe('footfall', centreId, callback);
   }
 
@@ -122,8 +122,8 @@ export function subscribeToFootfall(centreId, callback) {
 /**
  * Subscribes to doctor attendance for a specific centre today
  */
-export function subscribeToAttendance(centreId, callback) {
-  if (!db) {
+export function subscribeToAttendance(centreId, callback, forceMock = false) {
+  if (!db || forceMock) {
     return liveMockDb.subscribe('attendance', centreId, callback);
   }
 
@@ -147,8 +147,8 @@ export function subscribeToAttendance(centreId, callback) {
 /**
  * Subscribes to test availability for a specific centre (optional subcollection, falls back to mock)
  */
-export function subscribeToTests(centreId, callback) {
-  if (!db) {
+export function subscribeToTests(centreId, callback, forceMock = false) {
+  if (!db || forceMock) {
     return liveMockDb.subscribe('tests', centreId, callback);
   }
 

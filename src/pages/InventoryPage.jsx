@@ -4,6 +4,7 @@ import { subscribeToStock, subscribeToCentres } from '../db/firebase';
 import { Card } from '../components/Card';
 import { StatusBadge } from '../components/StatusBadge';
 import { LoadingScreen } from '../components/LoadingScreen';
+import { useHealthCentres } from '../context/HealthCentreContext';
 import { 
   ArrowLeft, 
   Search, 
@@ -19,6 +20,7 @@ import {
 
 export function InventoryPage() {
   const { centreId } = useParams();
+  const { useLocalMock } = useHealthCentres();
   
   const [centre, setCentre] = useState(null);
   const [stock, setStock] = useState([]);
@@ -38,15 +40,15 @@ export function InventoryPage() {
         setCentre(target);
       }
       setLoading(false);
-    });
+    }, useLocalMock);
 
-    const unsubStock = subscribeToStock(centreId, setStock);
+    const unsubStock = subscribeToStock(centreId, setStock, useLocalMock);
 
     return () => {
       unsubCentres();
       unsubStock();
     };
-  }, [centreId]);
+  }, [centreId, useLocalMock]);
 
   // Handle Header Click for Sorting
   const requestSort = (field) => {

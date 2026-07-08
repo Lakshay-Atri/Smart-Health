@@ -11,6 +11,7 @@ import { doctorProfiles } from '../db/mockData';
 import { Card } from '../components/Card';
 import { StatusBadge } from '../components/StatusBadge';
 import { LoadingScreen } from '../components/LoadingScreen';
+import { useHealthCentres } from '../context/HealthCentreContext';
 import { 
   AreaChart, 
   Area, 
@@ -35,6 +36,7 @@ import {
 export function CentreDetail() {
   const { centreId } = useParams();
   const navigate = useNavigate();
+  const { useLocalMock } = useHealthCentres();
   
   const [centre, setCentre] = useState(null);
   const [stock, setStock] = useState([]);
@@ -56,12 +58,12 @@ export function CentreDetail() {
         setCentre(target);
       }
       setLoading(false);
-    });
+    }, useLocalMock);
 
-    const unsubStock = subscribeToStock(centreId, setStock);
-    const unsubFootfall = subscribeToFootfall(centreId, setFootfall);
-    const unsubAttendance = subscribeToAttendance(centreId, setAttendance);
-    const unsubTests = subscribeToTests(centreId, setTests);
+    const unsubStock = subscribeToStock(centreId, setStock, useLocalMock);
+    const unsubFootfall = subscribeToFootfall(centreId, setFootfall, useLocalMock);
+    const unsubAttendance = subscribeToAttendance(centreId, setAttendance, useLocalMock);
+    const unsubTests = subscribeToTests(centreId, setTests, useLocalMock);
 
     return () => {
       unsubCentres();
@@ -70,7 +72,7 @@ export function CentreDetail() {
       unsubAttendance();
       unsubTests();
     };
-  }, [centreId]);
+  }, [centreId, useLocalMock]);
 
   if (loading) {
     return <LoadingScreen />;
@@ -113,8 +115,10 @@ export function CentreDetail() {
   const chartData = formatChartData();
 
   // Compute stats
-  const bedOccupancyPercent = centre.totalBeds > 0 
-    ? Math.round((centre.occupiedBeds / centre.totalBeds) * 100) 
+  const totalBeds = centre.totalBeds ?? centre.bedsTotal ?? 0;
+  const occupiedBeds = centre.occupiedBeds ?? centre.bedsOccupied ?? 0;
+  const bedOccupancyPercent = totalBeds > 0 
+    ? Math.round((occupiedBeds / totalBeds) * 100) 
     : 0;
 
   const lowStockItems = stock.filter(item => {
@@ -163,8 +167,8 @@ export function CentreDetail() {
         <Card title="Bed Availability" icon={<Bed className="w-5 h-5 text-indigo-500" />}>
           <div className="flex items-center justify-between mt-2">
             <div className="space-y-1">
-              <span className="text-3xl font-extrabold text-slate-800">{centre.totalBeds - centre.occupiedBeds} free</span>
-              <span className="text-xs text-slate-400 font-semibold block whitespace-nowrap">{centre.totalBeds - centre.occupiedBeds} of {centre.totalBeds} beds available</span>
+              <span className="text-3xl font-extrabold text-slate-800">{totalBeds - occupiedBeds} free</span>
+              <span className="text-xs text-slate-400 font-semibold block whitespace-nowrap">{totalBeds - occupiedBeds} of {totalBeds} beds available</span>
             </div>
             <div className="relative flex items-center justify-center">
               {/* Circular Progress */}
@@ -174,15 +178,15 @@ export function CentreDetail() {
                   cx="32" 
                   cy="32" 
                   r="26" 
-                  stroke={(centre.totalBeds - centre.occupiedBeds) / centre.totalBeds < 0.2 ? '#ef4444' : '#6366f1'} 
+                  stroke={(totalBeds - occupiedBeds) / totalBeds < 0.2 ? '#ef4444' : '#6366f1'} 
                   strokeWidth="6" 
                   fill="transparent" 
                   strokeDasharray={163.3}
-                  strokeDashoffset={163.3 - (163.3 * (centre.totalBeds - centre.occupiedBeds)) / (centre.totalBeds || 1)}
+                  strokeDashoffset={163.3 - (163.3 * (totalBeds - occupiedBeds)) / (totalBeds || 1)}
                   className="transition-all duration-700 ease-out"
                 />
               </svg>
-              <span className="absolute text-[10px] font-bold text-slate-650">{centre.totalBeds - centre.occupiedBeds} free</span>
+              <span className="absolute text-[10px] font-bold text-slate-655 text-slate-600">{totalBeds - occupiedBeds} free</span>
             </div>
           </div>
         </Card>

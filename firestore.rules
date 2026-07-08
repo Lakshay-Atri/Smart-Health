@@ -2,11 +2,34 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Matches any document in the hospitals collection or its subcollections
-    match /hospitals/{hospitalId} {
+    // Allow read/write access to centres and its subcollections (like tests)
+    match /centres/{centreId} {
       allow read, write: if true;
-      
-      match /medicines/{medicineId} {
+      match /{document=**} {
+        allow read, write: if true;
+      }
+    }
+    
+    // Allow read/write access to stock and its subcollections (like items)
+    match /stock/{centreId} {
+      allow read, write: if true;
+      match /{document=**} {
+        allow read, write: if true;
+      }
+    }
+    
+    // Allow read/write access to footfall and its subcollections (like records)
+    match /footfall/{centreId} {
+      allow read, write: if true;
+      match /{document=**} {
+        allow read, write: if true;
+      }
+    }
+    
+    // Allow read/write access to attendance and its subcollections (like records)
+    match /attendance/{centreId} {
+      allow read, write: if true;
+      match /{document=**} {
         allow read, write: if true;
       }
     }

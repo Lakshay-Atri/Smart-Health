@@ -4,8 +4,10 @@ import { liveMockDb, initialCentres, initialStock, initialAttendance, initialFoo
 import { doc, setDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
 import { Card } from '../components/Card';
 import { Users, BedDouble, Pill, ClipboardList, Save, Plus, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { useHealthCentres } from '../context/HealthCentreContext';
 
 export default function DataEntry() {
+  const { useLocalMock, seedDatabase } = useHealthCentres();
   const [centres, setCentres] = useState([]);
   const [selectedCentreId, setSelectedCentreId] = useState('');
   const [stockItems, setStockItems] = useState([]);
@@ -63,9 +65,9 @@ export default function DataEntry() {
       setTimeout(() => {
         setLoading(false);
       }, 800);
-    });
+    }, useLocalMock);
     return unsub;
-  }, []);
+  }, [useLocalMock]);
 
   // Subscribe to stock list for selected centre
   useEffect(() => {
@@ -75,9 +77,9 @@ export default function DataEntry() {
     }
     const unsub = subscribeToStock(selectedCentreId, (list) => {
       setStockItems(list);
-    });
+    }, useLocalMock);
     return unsub;
-  }, [selectedCentreId]);
+  }, [selectedCentreId, useLocalMock]);
 
   // Seeding Firestore database directly from the browser
   const handleSeedDatabase = async () => {
@@ -86,52 +88,11 @@ export default function DataEntry() {
     triggerAlert('success', 'Starting database seed... Please wait.');
 
     try {
-      for (const [centreId, centre] of Object.entries(initialCentres)) {
-        // 1. Write centre doc
-        const centreRef = doc(db, 'centres', centreId);
-        await setDoc(centreRef, {
-          name: centre.name,
-          location: centre.location,
-          bedsTotal: centre.totalBeds,
-          bedsOccupied: centre.occupiedBeds
-        });
-
-        // 2. Write stock items
-        const stock = initialStock[centreId] || {};
-        for (const [itemId, item] of Object.entries(stock)) {
-          const itemRef = doc(db, 'stock', centreId, 'items', itemId);
-          await setDoc(itemRef, {
-            name: item.name,
-            currentStock: item.currentStock,
-            avgDailyUsage: item.avgDailyUsage,
-            reorderThreshold: item.reorderThreshold
-          });
-        }
-
-        // 3. Write footfall records
-        const footfall = initialFootfall[centreId] || {};
-        for (const [date, record] of Object.entries(footfall)) {
-          const recordRef = doc(db, 'footfall', centreId, 'records', date);
-          await setDoc(recordRef, {
-            patientCount: record.patientCount
-          });
-        }
-
-        // 4. Write attendance records
-        const attendance = initialAttendance[centreId] || [];
-        for (let i = 0; i < attendance.length; i++) {
-          const recId = `rec_${i + 1}`;
-          const recRef = doc(db, 'attendance', centreId, 'records', recId);
-          await setDoc(recRef, {
-            doctorId: attendance[i].doctorId,
-            checkedIn: attendance[i].checkedIn
-          });
-        }
-      }
+      await seedDatabase();
       triggerAlert('success', 'Database seeded successfully! All health centres are now loaded.');
     } catch (err) {
       console.error(err);
-      triggerAlert('error', `Seeding failed: ${err.message}`);
+      triggerAlert('error', `Seeding failed: ${err.message || err}`);
     } finally {
       setSeeding(false);
     }
@@ -226,6 +187,8 @@ export default function DataEntry() {
         // Live Firestore Mode
         const docRef = doc(db, 'centres', selectedCentreId);
         await updateDoc(docRef, {
+          totalBeds: totalVal,
+          occupiedBeds: occupiedVal,
           bedsTotal: totalVal,
           bedsOccupied: occupiedVal
         });
